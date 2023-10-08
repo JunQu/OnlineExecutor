@@ -1,7 +1,6 @@
 package org.olexec.execute;
 
-import sun.reflect.CallerSensitive;
-
+import jdk.internal.reflect.CallerSensitive;
 import java.io.*;
 import java.nio.channels.Channel;
 import java.util.Properties;
