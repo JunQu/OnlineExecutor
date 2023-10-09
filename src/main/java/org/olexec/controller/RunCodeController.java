@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.*;
 public class RunCodeController {
     private final Logger logger = LoggerFactory.getLogger(RunCodeController.class);
 
-    private ExecuteStringSourceService executeStringSourceService;
+    private final ExecuteStringSourceService executeStringSourceService;
 
     @Autowired
     RunCodeController(ExecuteStringSourceService executeStringSourceService) {

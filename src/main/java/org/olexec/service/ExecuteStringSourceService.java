@@ -20,7 +20,7 @@ public class ExecuteStringSourceService {
 
     /* 负责执行客户端代码的线程池，根据《Java 开发手册》不可用 Executor 创建，有 OOM 的可能 */
     private static final ExecutorService pool = new ThreadPoolExecutor(N_THREAD, N_THREAD,
-            0L, TimeUnit.SECONDS, new ArrayBlockingQueue<Runnable>(N_THREAD));
+            0L, TimeUnit.SECONDS, new ArrayBlockingQueue<>(N_THREAD));
 
     private static final String WAIT_WARNING = "服务器忙，请稍后提交";
     private static final String NO_OUTPUT = "Nothing.";
@@ -46,14 +46,9 @@ public class ExecuteStringSourceService {
         }
 
         // 运行字节码的main方法
-        Callable<String> runTask = new Callable<String>() {
-            @Override
-            public String call() throws Exception {
-                return JavaClassExecutor.execute(classBytes, systemIn);
-            }
-        };
+        Callable<String> runTask = () -> JavaClassExecutor.execute(classBytes, systemIn);
 
-        Future<String> res = null;
+        Future<String> res;
         try {
             res = pool.submit(runTask);
         } catch (RejectedExecutionException e) {

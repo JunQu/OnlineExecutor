@@ -43,8 +43,8 @@ public class ClassModifier {
 
     /**
      * 字节码修改器，替换字节码常量池中 oldStr 为 newStr
-     * @param oldStr
-     * @param newStr
+     * @param oldStr 旧字符
+     * @param newStr 新字符
      * @return 修改后的字节码字节数组
      */
     public byte[] modifyUTF8Constant(String oldStr, String newStr) {

@@ -5,17 +5,17 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.net.URI;
-import java.util.Arrays;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class StringSourceCompiler {
-    private static Map<String, JavaFileObject> fileObjectMap = new ConcurrentHashMap<>();
+    private static final Map<String, JavaFileObject> fileObjectMap = new ConcurrentHashMap<>();
 
     /** 使用 Pattern 预编译功能 */
-    private static Pattern CLASS_PATTERN = Pattern.compile("class\\s+([$_a-zA-Z][$_a-zA-Z0-9]*)\\s*");
+    private static final Pattern CLASS_PATTERN = Pattern.compile("class\\s+([$_a-zA-Z][$_a-zA-Z0-9]*)\\s*");
 
     public static byte[] compile(String source, DiagnosticCollector<JavaFileObject> compileCollector) {
         JavaCompiler compiler = ToolProvider.getSystemJavaCompiler();
@@ -35,13 +35,13 @@ public class StringSourceCompiler {
         JavaFileObject sourceJavaFileObject = new TmpJavaFileObject(className, source);
 
         Boolean result = compiler.getTask(null, javaFileManager, compileCollector,
-                null, null, Arrays.asList(sourceJavaFileObject)).call();
+                null, null, List.of(sourceJavaFileObject)).call();
 
         JavaFileObject bytesJavaFileObject = fileObjectMap.get(className);
-        if (result && bytesJavaFileObject != null) {
+        if (Boolean.TRUE.equals(result) && bytesJavaFileObject != null) {
             return ((TmpJavaFileObject) bytesJavaFileObject).getCompiledBytes();
         }
-        return null;
+        return new byte[0];
     }
 
     /**
@@ -73,7 +73,7 @@ public class StringSourceCompiler {
      * 用来封装表示源码与字节码的对象
      */
     public static class TmpJavaFileObject extends SimpleJavaFileObject {
-        private String source;
+        private final String source;
         private ByteArrayOutputStream outputStream;
 
         /**

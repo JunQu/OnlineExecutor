@@ -9,7 +9,7 @@ import java.io.InputStream;
  * 唯一的功能就是为每一个线程都保持一个标准输入流
  */
 public class HackInputStream extends InputStream {
-    public final static ThreadLocal<InputStream> holdInputStream = new ThreadLocal<>();
+    public static final ThreadLocal<InputStream> holdInputStream = new ThreadLocal<>();
 
     @Override
     public int read() throws IOException {
